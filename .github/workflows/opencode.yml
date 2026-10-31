@@ -25,9 +25,9 @@ jobs:
       id-token: write
       issues: write
       actions: write
-    uses: denaidark/OhMyGithub/.github/workflows/opencode-prepare.yml@50a4788ac3fddc16b6852d0a71ca7a79528cc214
+    uses: denaidark/OhMyGithub/.github/workflows/opencode-prepare.yml@3b460fef6b0cbee61ae301726c8a54b00b73bfd2
     with:
-      runtime_ref: 50a4788ac3fddc16b6852d0a71ca7a79528cc214
+      runtime_ref: 3b460fef6b0cbee61ae301726c8a54b00b73bfd2
 
   opencode:
     needs: prepare
@@ -38,9 +38,9 @@ jobs:
       issues: write
       actions: read
       pull-requests: write
-    uses: denaidark/OhMyGithub/.github/workflows/opencode-reusable.yml@50a4788ac3fddc16b6852d0a71ca7a79528cc214
+    uses: denaidark/OhMyGithub/.github/workflows/opencode-reusable.yml@3b460fef6b0cbee61ae301726c8a54b00b73bfd2
     with:
-      runtime_ref: 50a4788ac3fddc16b6852d0a71ca7a79528cc214
+      runtime_ref: 3b460fef6b0cbee61ae301726c8a54b00b73bfd2
       issue_number: ${{ needs.prepare.outputs.issue_number }}
       request: ${{ needs.prepare.outputs.request }}
       issue_title: ${{ needs.prepare.outputs.issue_title }}
@@ -48,7 +48,6 @@ jobs:
       sender: ${{ needs.prepare.outputs.sender }}
       target_ref: ${{ needs.prepare.outputs.target_ref }}
       target_sha: ${{ needs.prepare.outputs.target_sha }}
-      opencode_version: ${{ needs.prepare.outputs.opencode_version }}
     secrets:
       OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
       OPENCODE_AUTH_JSON: ${{ secrets.OPENCODE_AUTH_JSON }}
