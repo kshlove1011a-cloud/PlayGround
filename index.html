@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#05010d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="description" content="NEON CUT - 다가오는 적을 박자에 맞춰 베는 모바일 리듬 게임" />
+  <title>NEON CUT — 리듬 슬래셔</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2305010d'/%3E%3Cpath d='M14 46L44 14l6 6-30 32z' fill='%2347f7ff'/%3E%3Cpath d='M39 14h11v11z' fill='%23ff4fd8'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="gameWrap">
+    <canvas id="bgLayer" aria-hidden="true"></canvas>
+    <canvas id="game" aria-label="NEON CUT 게임 화면"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="screen-edge" id="screenEdge" aria-hidden="true"></div>
+
+    <section id="hud" class="hud hidden" aria-label="게임 정보">
+      <div class="hud-top">
+        <div class="score-block">
+          <span class="micro-label">SCORE</span>
+          <strong id="score">000000</strong>
+          <div id="shields" class="shields" aria-label="실드">
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+
+        <div class="track-block">
+          <div class="track-row">
+            <span class="micro-label">MIDNIGHT RUN</span>
+            <span id="timeLeft" class="time-left">0:48</span>
+          </div>
+          <div class="track-bar"><i id="progressFill"></i></div>
+        </div>
+
+        <div class="controls">
+          <button id="muteBtn" class="icon-btn" type="button" aria-label="소리 끄기" title="소리">
+            <span id="muteIcon">♪</span>
+          </button>
+          <button id="pauseBtn" class="icon-btn pause-icon" type="button" aria-label="일시정지" title="일시정지">
+            <span></span><span></span>
+          </button>
+        </div>
+      </div>
+
+      <div id="comboWrap" class="combo-wrap" aria-live="polite">
+        <strong id="combo">0</strong>
+        <span>COMBO</span>
+      </div>
+
+      <div class="hud-bottom">
+        <span id="accuracy" class="accuracy">100.0%</span>
+        <span class="tap-hint">화면을 탭</span>
+      </div>
+    </section>
+
+    <section id="titleScreen" class="screen title-screen" aria-label="시작 화면">
+      <div class="title-content">
+        <div class="eyebrow"><i></i> RHYTHM // SLASH <i></i></div>
+        <h1 class="logo" aria-label="NEON CUT">
+          <span class="logo-neon">NEON</span>
+          <span class="logo-cut" data-text="CUT">CUT</span>
+        </h1>
+        <p class="tagline">다가오는 적을, 박자에 맞춰 베어라.</p>
+
+        <div class="how-to" aria-label="게임 방법">
+          <div class="step"><b>01</b><span>적이<br />다가온다</span></div>
+          <div class="step"><b>02</b><span>링에 닿는<br />순간 탭</span></div>
+          <div class="step"><b>03</b><span>콤보를<br />쌓아라</span></div>
+        </div>
+
+        <button id="playBtn" class="primary-btn" type="button">
+          <span id="playLabel">START</span>
+          <i aria-hidden="true"></i>
+        </button>
+
+        <div class="title-meta">
+          <span>BEST <b id="bestScore">000000</b></span>
+          <span class="dot"></span>
+          <span>헤드폰 권장</span>
+        </div>
+      </div>
+      <div class="build-tag">120 BPM · 48 SEC</div>
+    </section>
+
+    <section id="countdown" class="countdown hidden" aria-hidden="true">
+      <span id="countdownText">3</span>
+    </section>
+
+    <section id="pauseScreen" class="screen pause-screen hidden" aria-label="일시정지">
+      <div class="panel">
+        <div class="eyebrow"><i></i> SYSTEM HOLD <i></i></div>
+        <h2>PAUSED</h2>
+        <p>호흡을 고르고, 다시 박자로.</p>
+        <button id="resumeBtn" class="primary-btn small" type="button"><span>계속하기</span><i aria-hidden="true"></i></button>
+        <button id="quitBtn" class="text-btn" type="button">타이틀로 돌아가기</button>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen hidden" aria-label="결과">
+      <div class="panel result-panel">
+        <div id="resultKicker" class="eyebrow"><i></i> STAGE CLEAR <i></i></div>
+        <div id="resultRank" class="rank">S</div>
+        <h2 id="resultTitle">CUT COMPLETE</h2>
+        <div class="final-score">
+          <span>FINAL SCORE</span>
+          <strong id="finalScore">000000</strong>
+        </div>
+        <div class="result-stats">
+          <div><span>PERFECT</span><b id="statPerfect">0</b></div>
+          <div><span>GREAT</span><b id="statGreat">0</b></div>
+          <div><span>GOOD</span><b id="statGood">0</b></div>
+          <div><span>MISS</span><b id="statMiss">0</b></div>
+          <div><span>MAX COMBO</span><b id="statCombo">0</b></div>
+          <div><span>ACCURACY</span><b id="statAccuracy">0%</b></div>
+        </div>
+        <div id="newBest" class="new-best hidden">NEW BEST</div>
+        <button id="replayBtn" class="primary-btn small" type="button"><span>한 번 더</span><i aria-hidden="true"></i></button>
+        <button id="homeBtn" class="text-btn" type="button">타이틀</button>
+      </div>
+    </section>
+
+    <div id="toast" class="toast hidden" aria-live="polite"></div>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
