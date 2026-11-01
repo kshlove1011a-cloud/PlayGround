@@ -1091,8 +1091,11 @@
   }
 
   function resize() {
-    W = Math.max(320, window.innerWidth || 320);
-    H = Math.max(480, window.innerHeight || 480);
+    // Match the real viewport exactly. A hard 320×480 floor used to push the
+    // canvas past the screen on short landscape phones, clipping the arena.
+    const viewport = window.visualViewport;
+    W = Math.max(1, Math.round(viewport ? viewport.width : window.innerWidth || document.documentElement.clientWidth || 320));
+    H = Math.max(1, Math.round(viewport ? viewport.height : window.innerHeight || document.documentElement.clientHeight || 480));
     DPR = clamp(window.devicePixelRatio || 1, 1, dprCap);
     canvas.width = Math.max(1, Math.round(W * DPR));
     canvas.height = Math.max(1, Math.round(H * DPR));
@@ -1110,7 +1113,10 @@
     strikeY = H * (portrait ? 0.685 : 0.665);
     strikeR = portrait
       ? Math.min(W * 0.255, H * 0.135, 118)
-      : Math.min(W * 0.17, H * 0.15, 112);
+      : Math.min(W * 0.14, H * 0.21, 132);
+    // Rebuild the skyline from the same seed so an adaptive DPR step does not
+    // make the background visibly reshuffle mid-song.
+    rngState = 0x4e454f4e;
     makeStars();
     buildBackground();
     buildCutGradient();
@@ -2421,6 +2427,11 @@
           event.preventDefault();
           resumeRun();
         }
+      }
+      if (event.key.toLowerCase() === 'm') {
+        event.preventDefault();
+        setMuted(!muted);
+        playSfx('ui');
       }
     });
 

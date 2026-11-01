@@ -33,7 +33,7 @@ body {
 body {
   position: fixed;
   inset: 0;
-  touch-action: none;
+  touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -747,11 +747,20 @@ button {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   overflow-y: auto;
+  touch-action: pan-y;
+  scrollbar-width: none;
+}
+
+.result-screen::-webkit-scrollbar {
+  display: none;
 }
 
 .result-panel {
   padding-top: 28px;
   padding-bottom: 24px;
+  /* Auto margins center the card when it fits but let short screens scroll
+     from the top instead of clipping the heading. */
+  margin: auto;
 }
 
 .rank {
@@ -965,6 +974,53 @@ button {
   }
   .text-btn {
     margin-top: 8px;
+  }
+
+  /* Short landscape phones need a denser result card so nothing is clipped. */
+  .result-screen {
+    align-items: flex-start;
+    padding-top: calc(12px + env(safe-area-inset-top));
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+  .result-panel {
+    padding: 14px 22px 14px;
+  }
+  .result-panel .rank {
+    margin: 4px 0 -2px;
+    font-size: clamp(44px, 12vh, 64px);
+  }
+  .result-panel h2 {
+    margin-top: 6px;
+    font-size: clamp(16px, 4.4vw, 22px);
+  }
+  .final-score {
+    margin-top: 10px;
+    padding: 8px 8px 7px;
+  }
+  .final-score strong {
+    font-size: clamp(26px, 7vw, 36px);
+  }
+  .result-stats {
+    margin-top: 8px;
+  }
+  .result-stats > div {
+    padding: 5px 4px 4px;
+  }
+  .result-stats b {
+    margin-top: 2px;
+    font-size: 13px;
+  }
+  .new-best {
+    margin-top: 7px;
+    padding: 3px 8px;
+  }
+  .result-panel .primary-btn.small {
+    height: 42px;
+    margin-top: 10px;
+  }
+  .result-panel .text-btn {
+    margin-top: 3px;
+    padding: 5px 10px;
   }
 }
 
